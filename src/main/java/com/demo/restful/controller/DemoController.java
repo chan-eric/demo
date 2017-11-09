@@ -22,6 +22,6 @@ public class DemoController {
 	
 	@GetMapping("{id}")
 	public String getStatus(@PathVariable("id") String id) {
-		return id;
+		return "demo "+id;
 	}
 }

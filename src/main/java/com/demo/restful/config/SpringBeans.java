@@ -14,19 +14,26 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.sql.DataSource;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+
 @Configuration
 public class SpringBeans {
 	
-	@Value("${define property in application}")
+	//@Value("${define property in application}")
 	private int maxConnectionCount;
 	
-	@Value("${define property in application}")
+	//@Value("${define property in application}")
 	private int maxPerRoute;
 
-	@Autowired
-	SSLContextConfigurator sslContextConfigurator;
+	//@Autowired
+	//SSLContextConfigurator sslContextConfigurator;
 	
-	
+	/*
 	@Bean 
 	public CloseableHttpClient messageSender() {
 		final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContextConfigurator.getSslContext(),
@@ -48,5 +55,24 @@ public class SpringBeans {
 		        .setSSLSocketFactory(sslsf)
 		        .build();
 		return httpClient;
+	}*/
+	
+	
+	@Bean
+	public DataSource dataSource() {
+
+		// no need shutdown, EmbeddedDatabaseFactoryBean will take care of this
+		EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
+		EmbeddedDatabase db = builder
+			.setType(EmbeddedDatabaseType.H2) //.H2 or .DERBY
+			.addScript("db/sql/create-db.sql")
+			.addScript("db/sql/insert-data.sql")
+			.build();
+		return db;
+	}
+	
+	@Bean
+	public JdbcTemplate getJdbcTemplate() {
+		return new JdbcTemplate(dataSource());
 	}
 }
