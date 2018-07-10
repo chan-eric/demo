@@ -33,29 +33,28 @@ public class SpringBeans {
 	//@Autowired
 	//SSLContextConfigurator sslContextConfigurator;
 	
-	/*
 	@Bean 
-	public CloseableHttpClient messageSender() {
-		final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContextConfigurator.getSslContext(),
-		        new NoopHostnameVerifier());
+		public HttpComponentsMessageSender messageSender() {
+			final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContextConfigurator.getSslContext(),
+			        new NoopHostnameVerifier());
 		
-		final Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder
-		        .<ConnectionSocketFactory>create().register("https", sslsf)
-		        .register("http", PlainConnectionSocketFactory.getSocketFactory()).build();
+			final Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder
+			        .<ConnectionSocketFactory>create().register("https", sslsf)
+			        .register("http", PlainConnectionSocketFactory.getSocketFactory()).build();
 		
-		final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(
-		        socketFactoryRegistry);
-		connectionManager.setMaxTotal(maxConnectionCount);
-		connectionManager.setDefaultMaxPerRoute(maxPerRoute);
+			final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(
+			        socketFactoryRegistry);
+			connectionManager.setMaxTotal(maxConnectionCount);
+			connectionManager.setDefaultMaxPerRoute(maxPerRoute);
 		
-		final CloseableHttpClient httpClient = HttpClients.custom()
-		        //.addInterceptorFirst(new ContentLengthHeaderRemover())
-		        //.addInterceptorFirst(new HttpVersionSetterInterceptor())
-		        .setConnectionManager(connectionManager)
-		        .setSSLSocketFactory(sslsf)
-		        .build();
-		return httpClient;
-	}*/
+			final CloseableHttpClient httpClient = HttpClients.custom()
+			        .addInterceptorFirst(new ContentLengthHeaderRemover())
+			        .addInterceptorFirst(new HttpVersionSetterInterceptor())
+			        .setConnectionManager(connectionManager)
+			        .setSSLSocketFactory(sslsf)
+			        .build();
+			return new HttpComponentsMessageSender(httpClient);
+		}
 	
 	
 	@Bean
